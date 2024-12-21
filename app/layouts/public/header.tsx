@@ -1,6 +1,6 @@
-import { Snowflake, Menu, Search, User } from 'lucide-react';
+import { Snowflake, Menu, Search, User, FilePenLine, SquareLibrary, Folder, LayoutTemplate } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +24,12 @@ import {
 import { cn } from '@/lib/utils';
 
 export function Header() {
+  const [isButtonDisabled, setButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    setButtonDisabled(true);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -32,6 +38,20 @@ export function Header() {
             <Snowflake className="h-6 w-6" />
             <span className="hidden font-bold sm:inline-block">Fairy Desk</span>
           </Link>
+        </div>
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost"> 
+            <SquareLibrary className="h-5 w-5"/>
+            <Link href="/glossary">Glossary</Link>
+          </Button>
+          <Button variant="ghost"> 
+            <Folder className="h-5 w-5"/>
+            <Link href="/docs">My docs</Link>
+          </Button>
+          <Button variant="ghost">
+            <LayoutTemplate className="h-5 w-5"/>
+            <Link href="/template">Templates</Link>
+          </Button>
         </div>
         <div className="flex items-center gap-4">
           <Button variant="default"> 
@@ -42,26 +62,3 @@ export function Header() {
     </header>
   );
 }
-
-const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
-  ({ className, title, children, ...props }, ref) => {
-    return (
-      <li>
-        <NavigationMenuLink asChild>
-          <Link
-            ref={ref}
-            className={cn(
-              'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-              className
-            )}
-            {...(props as any)}
-          >
-            <div className="text-sm font-medium leading-none">{title}</div>
-            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
-          </Link>
-        </NavigationMenuLink>
-      </li>
-    );
-  }
-);
-ListItem.displayName = 'ListItem';

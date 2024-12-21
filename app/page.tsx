@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from 'lucide-react';
+import { Search, SendHorizontal } from 'lucide-react';
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from '@/components/ui/input';
@@ -32,7 +32,7 @@ export default function Home() {
                   <Input type="search" placeholder="Search..." className="w-72 pl-8" />
                 </form>
                 <Button variant="default">
-                  <Link href="/opportunities">Send</Link>
+                  <Link href="/opportunities">Send</Link><SendHorizontal/>
                 </Button>
               </div>
             </div>
