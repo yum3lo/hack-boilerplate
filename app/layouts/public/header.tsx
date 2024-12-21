@@ -1,4 +1,4 @@
-import { Home, Menu, Search, User } from 'lucide-react';
+import { Snowflake, Menu, Search, User } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -23,38 +23,13 @@ import {
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: 'Alert Dialog',
-    href: '/docs/primitives/alert-dialog',
-    description:
-      'A modal dialog that interrupts the user with important content and expects a response.',
-  },
-  {
-    title: 'Hover Card',
-    href: '/docs/primitives/hover-card',
-    description: 'For sighted users to preview content available behind a link.',
-  },
-  {
-    title: 'Progress',
-    href: '/docs/primitives/progress',
-    description:
-      'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
-  },
-  {
-    title: 'Scroll-area',
-    href: '/docs/primitives/scroll-area',
-    description: 'Visually or semantically separates content.',
-  },
-];
-
 export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-10">
           <Link href="/" className="flex items-center space-x-2">
-            <Home className="h-6 w-6" />
+            <Snowflake className="h-6 w-6" />
             <span className="hidden font-bold sm:inline-block">Fairy Desk</span>
           </Link>
         </div>
