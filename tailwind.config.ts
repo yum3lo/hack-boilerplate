@@ -1,5 +1,26 @@
 import type { Config } from 'tailwindcss';
 
+const addVariablesForColors = ({ addBase, theme }: any) => {
+  const colors = theme("colors") as Record<string, any>;
+
+  const flattenColors = (colorObj: Record<string, any>, prefix = ""): Record<string, string> => {
+    return Object.entries(colorObj).reduce((acc, [key, value]) => {
+      if (typeof value === "string") {
+        acc[`--${prefix}${key}`] = value;
+      } else if (typeof value === "object" && value !== null) {
+        Object.assign(acc, flattenColors(value, `${prefix}${key}-`));
+      }
+      return acc;
+    }, {} as Record<string, string>);
+  };
+
+  const colorVariables = flattenColors(colors);
+
+  addBase({
+    ":root": colorVariables,
+  });
+};
+
 const config: Config = {
   darkMode: ['class'],
   content: [
@@ -13,6 +34,19 @@ const config: Config = {
       center: true,
     },
     extend: {
+      animation: {
+        aurora: "aurora 60s linear infinite",
+      },
+      keyframes: {
+        aurora: {
+          from: {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          to: {
+            backgroundPosition: "350% 50%, 350% 50%",
+          },
+        },
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -62,6 +96,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'), addVariablesForColors],
 };
+
 export default config;

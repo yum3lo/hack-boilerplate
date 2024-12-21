@@ -1,7 +1,9 @@
 "use client";
 
+import { Search } from 'lucide-react';
 import Image from "next/image";
 import Link from "next/link";
+import { Input } from '@/components/ui/input';
 // import { parseAsBoolean, useQueryState } from "nuqs";
 
 import { Button } from "@/components/ui/button";
@@ -22,12 +24,15 @@ export default function Home() {
             </h1>
             <div className="max-w-[570px]">
               <p className="max-w-[520px] text-lg text-gray-600">
-                Conectăm oamenii care vor să se implice cu organizațiile care creează oportunități
-                de voluntariat.
+                Ask a question here. Santa's little helpers are here to help you.
               </p>
-              <div className="mt-12 flex justify-end">
+              <div className="mt-4 flex flex-col items-end space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
+                <form className="relative hidden md:block">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input type="search" placeholder="Search..." className="w-72 pl-8" />
+                </form>
                 <Button variant="default">
-                  <Link href="/opportunities">Vezi oportunitățile</Link>
+                  <Link href="/opportunities">Send</Link>
                 </Button>
               </div>
             </div>
