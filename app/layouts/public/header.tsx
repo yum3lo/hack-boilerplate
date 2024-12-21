@@ -1,4 +1,4 @@
-import { Snowflake, Menu, Search, User, SquareLibrary, Folder } from 'lucide-react';
+import { Snowflake, Menu, Search, User, SquareLibrary, Folder, LayoutTemplate } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
@@ -35,12 +35,16 @@ export function Header() {
         </div>
         <div className="flex items-center space-x-4">
           <Button variant="ghost"> 
-          <SquareLibrary className="h-5 w-5"/>
+            <SquareLibrary className="h-5 w-5"/>
             <Link href="/glossary">Glossary</Link>
           </Button>
           <Button variant="ghost"> 
             <Folder className="h-5 w-5"/>
             <Link href="/docs">My docs</Link>
+          </Button>
+          <Button variant="ghost">
+            <LayoutTemplate className="h-5 w-5"/>
+            <Link href="/templates">Templates</Link>
           </Button>
         </div>
         <div className="flex items-center gap-4">
