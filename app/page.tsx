@@ -19,13 +19,6 @@ export default function Home() {
           <div>
             <h1 className="mb-6 max-w-[600px] text-5xl font-bold">
               Need help?
-              {/* <Image
-                alt="heart"
-                src="/heart-icon.svg"
-                className="ml-3 mt-[-24px] inline-block"
-                height={57}
-                width={48}
-              /> */}
             </h1>
             <div className="max-w-[570px]">
               <p className="max-w-[520px] text-lg text-gray-600">
@@ -40,13 +33,13 @@ export default function Home() {
             </div>
           </div>
           <div className="w-auto">
-            {/* <Image
+            <Image
               width={458}
               height={446}
-              src="/home-page.webp"
-              alt="Hands joining together"
+              src="/skeleton.webp"
+              alt="Skeleton"
               className="rounded-lg"
-            /> */}
+            />
           </div>
         </div>
       </main>
