@@ -1,0 +1,79 @@
+{
+    "terms": [
+      {
+        "term": "Act de Constituire",
+        "definition": "A foundational document required for business registration in Moldova that details the establishment of a company and its key operational terms. It must include founders' details, business name and address, and share distribution. This is a legal requirement for registering any business in Moldova.",
+        "category": "Legal Documents"
+      },
+      {
+        "term": "Business Address",
+        "definition": "The official registered address of the company where it conducts its business operations. This address must be provided during company registration and is used for all official correspondence.",
+        "category": "Registration Details"
+      },
+      {
+        "term": "Certificate of Registration",
+        "definition": "An official document that serves as proof of company registration. This can be provided either as a scanned copy or by reference number and is essential for proving the legal existence of your business.",
+        "category": "Registration Details"
+      },
+      {
+        "term": "Company Name",
+        "definition": "The official registered name of the business as it appears in legal documents and is used for all business transactions and correspondence.",
+        "category": "Registration Details"
+      },
+      {
+        "term": "Contact Email",
+        "definition": "The primary email address designated for official business communication and correspondence with authorities and partners.",
+        "category": "Contact Information"
+      },
+      {
+        "term": "Contact Phone Number",
+        "definition": "The official phone number registered for business correspondence and communication with stakeholders.",
+        "category": "Contact Information"
+      },
+      {
+        "term": "Contract de Muncă",
+        "definition": "An employment contract that establishes the legal relationship between employer and employee. It outlines key terms including the employee's position and responsibilities, salary and payment terms, and leave entitlement. This document is legally required for all employment relationships in Moldova.",
+        "category": "Legal Documents"
+      },
+      {
+        "term": "Declarație de Beneficiari Efectivi",
+        "definition": "A mandatory declaration that identifies the individuals who ultimately own or control a company. This document promotes transparency and complies with anti-money laundering laws by requiring disclosure of beneficiary names, identification details, and percentage of ownership.",
+        "category": "Legal Documents"
+      },
+      {
+        "term": "Document de Predare-Primire",
+        "definition": "A handover document used to officially transfer goods, equipment, or responsibilities between parties. It includes the date of transfer, details of transferred items, signatures of both parties, and any relevant conditions or notes about the items.",
+        "category": "Business Operations"
+      },
+      {
+        "term": "Factura",
+        "definition": "An official invoice issued by the seller to the buyer requesting payment for goods or services. It must include seller and buyer details (name, address, IDNO, VAT code), description of goods/services provided, total amount including VAT, and date of issue and invoice number.",
+        "category": "Financial Documents"
+      },
+      {
+        "term": "IBAN",
+        "definition": "International Bank Account Number used for business financial transactions. This is essential for receiving payments and conducting financial operations.",
+        "category": "Financial Information"
+      },
+      {
+        "term": "IDNO",
+        "definition": "State Identification Number that also serves as the Taxpayer Identification Number. This unique identifier is used for all official business transactions and documentation.",
+        "category": "Registration Details"
+      },
+      {
+        "term": "Name Reservation Certificate",
+        "definition": "An optional document that proves the reservation of a company name prior to full registration. While not mandatory, it can be useful in securing your desired business name.",
+        "category": "Registration Details"
+      },
+      {
+        "term": "Useful Resources",
+        "definition": "Key government websites and portals for business operations in Moldova:\n- Public Services Agency (ASP): asp.gov.md\n- State Tax Service (SFS): sfs.md\n- Moldova Business Portal: business.gov.md\n- Chamber of Commerce: chamber.md\n- Ministry of Finance: mf.gov.md\n- Labor Inspectorate: ism.gov.md\n- E-Government Center: egov.md",
+        "category": "Resources"
+      },
+      {
+        "term": "VAT Number",
+        "definition": "A unique identifier issued to VAT-registered businesses. This is only required for companies that are registered for Value Added Tax in Moldova.",
+        "category": "Financial Information"
+      }
+    ]
+  }
