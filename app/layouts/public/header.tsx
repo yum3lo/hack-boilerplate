@@ -1,6 +1,6 @@
-import { Snowflake, Menu, Search, User } from 'lucide-react';
+import { Snowflake, Menu, Search, User, FilePenLine } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +24,12 @@ import {
 import { cn } from '@/lib/utils';
 
 export function Header() {
+  const [isButtonDisabled, setButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    setButtonDisabled(true);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -32,6 +38,12 @@ export function Header() {
             <Snowflake className="h-6 w-6" />
             <span className="hidden font-bold sm:inline-block">Fairy Desk</span>
           </Link>
+          <div className="flex items-center gap-4">
+            <Button variant="default"> 
+              <FilePenLine className="h-5 w-5" />
+              <Link href="/template">Templates</Link>
+            </Button>
+          </div>
         </div>
         <div className="flex items-center gap-4">
           <Button variant="default"> 
