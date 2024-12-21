@@ -1,5 +1,4 @@
-export const baseQueryUrl =
-  process.env.NEXT_PUBLIC_API_URL || 'https://jsonplaceholder.typicode.com';
+export const baseQueryUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 

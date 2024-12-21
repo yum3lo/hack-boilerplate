@@ -56,7 +56,7 @@ export default function LoginPage() {
             </Button>
             {isError && (
               <p className="text-red-500 text-sm mt-2">
-                {error?.data?.message || "Login failed. Please try again."}
+                { "Login failed. Please try again."}
               </p>
             )}
             {isSuccess && <p className="text-green-500 text-sm mt-2">Login successful!</p>}
