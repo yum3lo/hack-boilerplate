@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 
 import { Button } from "@/components/ui/button";
 import PublicLayout from "./layouts/public";
-
 // import SetupAccountDialog from "./auth/login/components/setup-dialog";
 
 export default function Home() {
@@ -16,6 +15,7 @@ export default function Home() {
 
   return (
     <PublicLayout title="Home">
+      
       <main className="container my-10 flex items-center justify-center">
         <div className="flex items-center justify-between space-x-[10vw]">
           <div>

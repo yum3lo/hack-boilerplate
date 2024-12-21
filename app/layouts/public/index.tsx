@@ -17,7 +17,7 @@ const PublicLayout = ({
 }: React.PropsWithChildren<PublicLayoutProps>) => {
   return (
     <AuroraBackground>
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen w-full flex-col overflow-auto">
         <title>{`${title} | voluntariat`}</title>
         {description && <meta name="description" content={description} />}
         <Header />
