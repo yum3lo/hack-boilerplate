@@ -48,8 +48,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      {/* <SetupAccountDialog open={!!setup} onOpenChange={setSetup} /> */}
     </PublicLayout>
   );
 }
