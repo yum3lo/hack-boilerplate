@@ -121,30 +121,13 @@ export function Header() {
           <Button variant="ghost" size="icon" className="md:hidden">
             <Search className="h-5 w-5" />
           </Button>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
-                <SheetDescription>Navigate through our app</SheetDescription>
-              </SheetHeader>
-              <div className="flex flex-col gap-4 py-4">
-                <Link href="/features" className="text-sm font-medium">
-                  Features
-                </Link>
-                <Link href="/pricing" className="text-sm font-medium">
-                  Pricing
-                </Link>
-                <Link href="/about" className="text-sm font-medium">
-                  About
-                </Link>
-              </div>
-            </SheetContent>
-          </Sheet>
+
+          {/* User Authentication */}
+          <Button variant="ghost" className="text-white bg-black" > 
+          <Link href="/login">Log In</Link><User className="h-5 w-5" />
+          </Button>
+
+          
         </div>
       </div>
     </header>
