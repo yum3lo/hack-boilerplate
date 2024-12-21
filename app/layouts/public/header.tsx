@@ -1,4 +1,4 @@
-import { Snowflake, Menu, Search, User, FilePenLine } from 'lucide-react';
+import { Snowflake, Menu, Search, User, FilePenLine, SquareLibrary, Folder, LayoutTemplate } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
@@ -38,12 +38,6 @@ export function Header() {
             <Snowflake className="h-6 w-6" />
             <span className="hidden font-bold sm:inline-block">Fairy Desk</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <Button variant="default"> 
-              <FilePenLine className="h-5 w-5" />
-              <Link href="/template">Templates</Link>
-            </Button>
-          </div>
         </div>
         <div className="flex items-center space-x-4">
           <Button variant="ghost"> 
@@ -56,7 +50,7 @@ export function Header() {
           </Button>
           <Button variant="ghost">
             <LayoutTemplate className="h-5 w-5"/>
-            <Link href="/templates">Templates</Link>
+            <Link href="/template">Templates</Link>
           </Button>
         </div>
         <div className="flex items-center gap-4">
