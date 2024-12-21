@@ -97,7 +97,7 @@ export function Header() {
 
           {/* User Authentication */}
           <Button variant="ghost" className="text-white bg-black" > 
-            Sign In<User className="h-5 w-5" />
+          <Link href="/login">Log In</Link><User className="h-5 w-5" />
           </Button>
 
           
