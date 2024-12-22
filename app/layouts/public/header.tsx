@@ -64,7 +64,7 @@ export function Header() {
           )}
           <Button variant="ghost">
             <LayoutTemplate className="h-5 w-5" />
-            <Link href="/template">Templates</Link>
+            <Link href="/templates">Templates</Link>
           </Button>
         </div>
         <div className="flex items-center gap-4">
