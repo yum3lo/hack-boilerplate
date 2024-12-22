@@ -168,8 +168,8 @@ export default function Home() {
             <Image
               width={458}
               height={446}
-              src="/skeleton.webp"
-              alt="Skeleton"
+              src="/fairy-sad.png"
+              alt="fairy-sad"
               className="rounded-lg"
             />
           </div>

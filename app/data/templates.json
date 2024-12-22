@@ -3,52 +3,72 @@
         {
             "name": "DeclarațIa Privind Beneficiarul Efectiv/Beneficiarii Efectivi",
             "description": "A mandatory declaration that identifies the individuals who ultimately own or control a company. This document promotes transparency and complies with anti-money laundering laws by requiring disclosure of beneficiary names, identification details, and percentage of ownership.",
-            "category": "Legal Documents"
+            "category": "Legal Documents",
+            "documentType": "PDF",
+            "file": "/documents/PRLab.pdf"
         },
         {
             "name": "Cerere de înregistrare a modificărilor şi completărilor în datele înscrise în Registrul de stat",
             "description": "A request form for registering changes and additions to the data entered in the State Register. This form is used to update company information, such as address, shareholders, or directors, and must be submitted to the relevant authorities for approval.",
-            "category": "Legal Documents"
+            "category": "Legal Documents",
+            "documentType": "DOCX",
+            "file": "/documents/doc2.docx"
         },
         {
             "name": "Cerere de verificare şi rezervare a denumirii",
             "description": "A request form for verifying and reserving the company name. This form is submitted to the relevant authorities to check the availability of the desired business name and reserve it for future registration.",
-            "category": "Registration Details"
+            "category": "Registration Details",
+            "documentType": "PDF",
+            "file": "/documents/PRLab.pdf"
         },
         {
             "name": "Cerere privind înregistrarea de stat a întreprinzătorului individual",
             "description": "A request form for the state registration of an individual entrepreneur. This form is used to establish a legal entity for a sole proprietorship and must be submitted to the relevant authorities for approval.",
-            "category": "Registration Details"
+            "category": "Registration Details",
+            "documentType": "PDF",
+            "file": "/documents/PRLab.pdf"
         },
         {
             "name": "Cerere privind înregistrarea de stat a persoanei juridice",
             "description": "A request form for the state registration of a legal entity. This form is used to establish a company or organization and must be submitted to the relevant authorities for approval.",
-            "category": "Registration Details"
+            "category": "Registration Details",
+            "documentType": "DOCX",
+            "file": "/documents/doc2.docx"
         },
         {
             "name": "Cerere de înregistrare în Registrul de stat al persoanelor juridice a suspendării activităţii",
             "description": "A request form for registering the suspension of business activities in the State Register of Legal Entities. This form is used to temporarily halt company operations and must be submitted to the relevant authorities for approval.",
-            "category": "Legal Documents"
+            "category": "Legal Documents",
+            "documentType": "PDF",
+            "file": "/documents/PRLab.pdf"
         },
         {
             "name": "Contract de Muncă",
             "description": "An employment contract that establishes the legal relationship between employer and employee. It outlines key terms including the employee's position and responsibilities, salary and payment terms, and leave entitlement. This document is legally required for all employment relationships in Moldova.",
-            "category": "Legal Documents"
+            "category": "Legal Documents",
+            "documentType": "DOCX",
+            "file": "/documents/doc2.docx"
         },
         {
             "name": "Declarația cu privire la impozitul unic",
             "description": "A declaration form for the flat tax regime. This form is used to opt for the simplified tax system and must be submitted to the tax authorities for approval.",
-            "category": "Financial Operations"
+            "category": "Financial Operations",
+            "documentType": "PDF",
+            "file": "/documents/PRLab.pdf"
         },
         {
             "name": "Informație privind stabilirea drepturilor sociale şi medicale aferente raporturilor de muncă",
             "description": "Information on the establishment of social and medical rights related to employment relationships. This document outlines the social security and medical benefits provided to employees and must be submitted to the relevant authorities for registration.",
-            "category": "Business Operations"
+            "category": "Business Operations",
+            "documentType": "PDF",
+            "file": "/documents/PRLab.pdf"
         },
         {
             "name": "Contract de Asigurare Socială",
             "description": "A social insurance contract that provides coverage for employees' social security benefits. This contract outlines the terms and conditions of social insurance and must be submitted to the relevant authorities for registration.",
-            "category": "Legal Documents"
+            "category": "Legal Documents",
+            "documentType": "DOCX",
+            "file": "/documents/doc2.docx"
         }
     ]
 }
