@@ -78,7 +78,7 @@ export default function LoginPage() {
             <img 
               width={458} 
               height={446} 
-              src="/skeleton.webp" 
+              src="/skeleton" 
               alt="Skeleton" 
               className="rounded-lg" 
             /> 
