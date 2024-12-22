@@ -1,13 +1,9 @@
 'use client';
 
 import { useState } from "react";
-import { useAuth } from '@/hooks/use-auth';
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FloatingLabelInput } from "@/components/ui/floating-label-input";
 import {
@@ -96,8 +92,7 @@ const optionalFields: BusinessField[] = [
 export default function AccountPage() {
   const router = useRouter();
   const { toast } = useToast();
-  //   const { user, isAuthenticated } = useAuth();
-  const isAuthenticated = true;
+  const isAuthenticated = true; // Replace with actual authentication logic
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>({});
 
@@ -110,19 +105,19 @@ export default function AccountPage() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      // Add your update profile logic here
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Simulate an API request
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       toast({
         title: "Success",
-        description: "Your business information has been updated.",
+        description: "Changes saved.",
       });
-      setIsLoading(false);
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to update business information. Please try again.",
+        description: "Failed to save changes. Please try again.",
       });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -132,11 +127,7 @@ export default function AccountPage() {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <div 
-              className="absolute right-2 top-2 cursor-pointer z-10"
-              onClick={() => description && router.push('/glossary')}
-            >
-            </div>
+            <div className="absolute right-2 top-2 cursor-pointer z-10"></div>
           </TooltipTrigger>
           {description && (
             <TooltipContent>
@@ -150,7 +141,7 @@ export default function AccountPage() {
         type={type || "text"}
         label={label}
         value={formData[id] || ''}
-        onChange={(e) => setFormData(prev => ({ ...prev, [id]: e.target.value }))}
+        onChange={(e) => setFormData((prev) => ({ ...prev, [id]: e.target.value }))}
         className="max-w-[300px]"
         required={required}
       />
@@ -161,9 +152,7 @@ export default function AccountPage() {
     <PublicLayout title="Account Settings">
       <main className="container my-10">
         <div className="max-w-5xl mx-auto">
-          <h1 className="mb-6 text-4xl font-bold">
-            Profile Details
-          </h1>
+          <h1 className="mb-6 text-4xl font-bold">Profile Details</h1>
           <Card>
             <CardHeader className="space-y-1">
               <div className="flex items-center space-x-4">

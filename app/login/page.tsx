@@ -1,31 +1,55 @@
 'use client';
-// src/app/login/LoginPage.tsx
+
 import { useState } from "react";
 import { useLoginMutation } from './queries';
+import { useAuth } from '@/hooks/use-auth';
+import { useRouter } from 'next/navigation';
+import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAppDispatch } from '@/lib/store';  // Import dispatch hook
-import { loginSuccess } from '@/lib/store/userSlice';  // Import the loginSuccess action
+import { useToast } from "@/hooks/use-toast";
 import PublicLayout from "../layouts/public";
 
 export default function LoginPage() {
+  const { login } = useAuth();
+  const { toast } = useToast();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [login, { isLoading, isSuccess, isError }] = useLoginMutation();
-  const dispatch = useAppDispatch();
+  const [loginMutation, { isLoading }] = useLoginMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await login({ email, password }).unwrap();
-      console.log("Login successful", response);
+      const response = await loginMutation({ email, password }).unwrap();
+      
+      if (response.error === 0) {
+        // Login successful
+        login(response.data);
+        
+        toast({
+          title: "Success",
+          description: "Login successful!",
+        });
 
-      // Dispatch loginSuccess to update user state
-      dispatch(loginSuccess(response));
+        router.push('/');
+      } else {
+        // Login failed with error message
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: response.erorrMessage || "Login failed. Please try again.",
+        });
+      }
     } catch (err) {
-      console.error("Login failed", err);
+      console.error("Login failed:", err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Login failed. Please check your credentials.",
+      });
     }
   };
 
@@ -61,7 +85,7 @@ export default function LoginPage() {
                       <Input
                         id="password"
                         type="password"
-                        placeholder="•••••••"
+                        placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
@@ -70,19 +94,13 @@ export default function LoginPage() {
                     <Button type="submit" className="w-full" disabled={isLoading}>
                       {isLoading ? "Logging in..." : "Login"}
                     </Button>
-                    {isError && (
-                      <p className="text-red-500 text-sm mt-2">
-                        {"Login failed. Please try again."}
-                      </p>
-                    )}
-                    {isSuccess && <p className="text-green-500 text-sm mt-2">Login successful!</p>}
                   </form>
                 </CardContent>
               </Card>
             </div>
           </div>
           <div className="w-auto">
-            <img
+            <Image
               width={458}
               height={446}
               src="/skeleton.webp"

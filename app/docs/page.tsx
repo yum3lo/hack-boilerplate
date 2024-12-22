@@ -1,220 +1,178 @@
-'use client'
-import { useState } from "react";
-import { LayoutGrid, List as ListIcon } from "lucide-react"; // Lucide icons
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import PublicLayout from "../layouts/public"; // Adjust based on your project structure
-import mammoth from "mammoth"; // Add this to handle DOCX preview
-import { FaRegFilePdf } from "react-icons/fa6";
-import { Badge } from "@/components/ui/badge";
-import { TbFileTypeDocx } from "react-icons/tb";
+'use client';
 
-export default function DocumentFilter() {
+import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import { FileText, LayoutGrid, List as ListIcon, Edit, Send } from "lucide-react";
+import { TbFileTypeDocx } from "react-icons/tb";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import PublicLayout from "../layouts/public";
+
+interface Document {
+  id: number;
+  name: string;
+  file: string;
+  category: string;
+  content?: string;
+}
+
+export default function DocumentsPage() {
+  const router = useRouter();
   const [viewMode, setViewMode] = useState("grid");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedDocument, setSelectedDocument] = useState(null);
-  const [docxContent, setDocxContent] = useState(""); // State for DOCX content
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [docxContent, setDocxContent] = useState("");
 
   const documents = [
-    { id: 1, name: "Document 1", file: "/documents/PRLab.pdf", category: "PDF" },
-    { id: 2, name: "Document 2", file: "/documents/doc2.docx", category: "Word" },
-    { id: 3, name: "Document 3", file: "/documents/PRLab.pdf", category: "PDF" },
-    { id: 4, name: "Document 4", file: "/documents/doc2.docx", category: "Word" },
+    { id: 1, name: "Business Registration", file: "/documents/PRLab.pdf", category: "PDF" },
+    { id: 2, name: "Tax Declaration", file: "/documents/doc2.docx", category: "Word" },
+    { id: 3, name: "Annual Report", file: "/documents/PRLab.pdf", category: "PDF" },
+    { id: 4, name: "Employee Contracts", file: "/documents/doc2.docx", category: "Word" },
   ];
 
-  // Filter documents based on search and category
   const filteredDocuments = documents.filter((doc) => {
-    const matchesSearch = doc.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "all" || doc.category === selectedCategory;
+    const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || doc.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  // Load DOCX content when a document is selected
-  const handleDocxPreview = async (file) => {
-    try {
-      const response = await fetch(file);
-      const arrayBuffer = await response.arrayBuffer();
-      const result = await mammoth.convertToHtml({ arrayBuffer });
-      setDocxContent(result.value); // Set the extracted DOCX content as HTML
-    } catch (error) {
-      console.error("Error loading DOCX file:", error);
-      setDocxContent("Unable to preview this document.");
-    }
-  };
-
-  const renderDocuments = () => {
-    const getCategoryClass = (category) => {
-      switch (category) {
-        case "PDF":
-          return "bg-blue-100 text-blue-800";
-        case "Word":
-          return "bg-green-100 text-green-800";
-        default:
-          return "bg-gray-100 text-gray-800";
-      }
-    };
-
-    return filteredDocuments.map((doc) => (
-      <Dialog key={doc.id}>
-        <DialogTrigger asChild>
-          <div
-            className={`border rounded-lg p-4 bg-gray-100 hover:shadow-lg transition-shadow cursor-pointer ${
-              viewMode === "grid" ? "grid grid-cols-1 gap-4" : ""
-            }`}
-            onClick={() => {
-              setSelectedDocument(doc);
-              if (doc.file.endsWith(".docx")) handleDocxPreview(doc.file);
-            }}
-          >
-            <h3 className="text-center text-sm font-bold text-gray-800 flex items-center justify-center">
-              {doc.name}
-            </h3>
-            <div className="flex items-center justify-center space-x-2 mt-2">
-            {/* <Badge className="inline-flex items-center justify-center text-xs font-bold px-2 py-1 rounded-full">
-              {doc.category}
-            </Badge> */}
-            <Badge
-              className={`inline-flex items-center justify-center text-base font-bold px-2 py-1 rounded-full ${
-                doc.file.endsWith(".pdf") ? "bg-red-500 text-white" : doc.file.endsWith(".docx") ? "bg-blue-500 text-white" : "bg-gray-200 text-black"
-              }`}
-            >
-              {doc.file.endsWith(".pdf") ? <FaRegFilePdf /> : doc.file.endsWith(".docx") ? <TbFileTypeDocx /> : "Unknown"}
-            </Badge>
-          </div>
-          <div className="mt-2">
-            {doc.file.endsWith(".pdf") ? (
-              <iframe
-                src={doc.file}
-                title={doc.name}
-                className="w-full h-[150px] border rounded-lg"
-              ></iframe>
-            ) : doc.file.endsWith(".docx") ? (
-              <div
-                className="w-full h-[150px] overflow-hidden border rounded-lg p-2 bg-gray-50"
-                dangerouslySetInnerHTML={{ __html: docxContent }}
-              ></div>
-            ) : (
-              <p className="text-center text-gray-600">
-                Preview not available.
-              </p>
-            )}
-          </div>
-        </div>
-        </DialogTrigger>
-        {selectedDocument && (
-          <DialogContent className="bg-white text-gray-800 rounded-lg shadow-lg p-6 max-w-[90vw] max-h-[90vh] overflow-auto">
-            <DialogHeader>
-              <DialogTitle>{selectedDocument.name}</DialogTitle>
-            </DialogHeader>
-            <div className="mt-4">
-              {selectedDocument.file.endsWith(".pdf") ? (
-                <iframe
-                  src={selectedDocument.file}
-                  title={selectedDocument.name}
-                  className="w-full h-[70vh] border rounded-lg"
-                ></iframe>
-              ) : selectedDocument.file.endsWith(".docx") ? (
-                <div
-                  className="w-full h-[70vh] overflow-y-auto overflow-x-hidden border rounded-lg p-4 bg-gray-50"
-                  style={{
-                    width: "87vw", // Fixed width
-                    height: "500px", // Fixed height
-                    overflowY: "auto", // Scrollable vertical content
-                    overflowX: "hidden", // Prevent horizontal scrolling
-                    wordWrap: "break-word", // Ensure text wraps
-                  }}
-                  dangerouslySetInnerHTML={{ __html: docxContent }}
-                ></div>
-              ) : (
-                <p className="text-center text-gray-600">
-                  File preview is not supported. Please download the file to view.
-                </p>
-              )}
-            </div>
-            {/* Buttons */}
-            <div className="mt-6 flex justify-end space-x-4">
-              <button
-                onClick={() => console.log("Edit button clicked")} // Replace with actual edit logic
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => console.log("Send button clicked")} // Replace with actual send logic
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-              >
-                Send
-              </button>
-            </div>
-          </DialogContent>
-        )}
-      </Dialog>
-    ));
+  const handleEdit = (doc: Document) => {
+    router.push(`/docs/${doc.id}`);
   };
 
   return (
-    <PublicLayout title="Document Viewer">
-      <div className="container py-8">
-        <h1 className="mb-6 text-4xl font-bold">Personal Documents</h1>
-        <p className="text-lg mb-4 leading-relaxed whitespace-pre-wrap">
-          View your own Documents.
-        </p>
-        {/* Filters */}
-        <div className="grid grid-cols-1 gap-8">
-          <div className="flex items-center justify-between space-x-4">
-            {/* Search Bar */}
-            <input
-              type="text"
-              placeholder="Search documents..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-
-            {/* Category Filter */}
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All</option>
-              <option value="PDF">PDF</option>
-              <option value="Word">Word</option>
-            </select>
-
-            {/* View Mode Toggle */}
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-2 rounded ${
-                  viewMode === "grid" ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-              >
-                <LayoutGrid className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`p-2 rounded ${
-                  viewMode === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-              >
-                <ListIcon className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Documents */}
-          <div className="border rounded-lg shadow-lg p-6 bg-white">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Documents</h2>
-            <div className={viewMode === "grid" ? "grid grid-cols-3 gap-4" : ""}>
-              {renderDocuments()}
+    <PublicLayout title="Documents">
+      <main className="container my-10 flex items-center justify-center">
+        <div className="flex items-center justify-between space-x-[10vw]">
+          <div>
+            <h1 className="mb-6 max-w-[600px] text-4xl font-bold">
+              My Documents
+            </h1>
+            <div className="max-w-[800px]">
+              <Card className="w-full">
+                <CardHeader className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <FileText className="h-8 w-8" />
+                      <div>
+                        <CardTitle className="text-2xl">Documents</CardTitle>
+                        <CardDescription>View and manage your business documents</CardDescription>
+                      </div>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant={viewMode === "grid" ? "default" : "outline"}
+                        size="icon"
+                        onClick={() => setViewMode("grid")}
+                      >
+                        <LayoutGrid className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant={viewMode === "list" ? "default" : "outline"}
+                        size="icon"
+                        onClick={() => setViewMode("list")}
+                      >
+                        <ListIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4 pt-4">
+                    <Input
+                      type="text"
+                      placeholder="Search documents..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="flex-1"
+                    />
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    >
+                      <option value="all">All Types</option>
+                      <option value="PDF">PDF</option>
+                      <option value="Word">Word</option>
+                    </select>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className={`grid ${viewMode === "grid" ? "grid-cols-2 gap-4" : "grid-cols-1 gap-2"}`}>
+                    {filteredDocuments.map((doc) => (
+                      <Dialog key={doc.id}>
+                        <DialogTrigger asChild>
+                          <div className="group relative overflow-hidden rounded-lg border bg-card p-4 transition-shadow hover:shadow-lg">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-2">
+                                {doc.category === "PDF" ? (
+                                  <FileText className="h-8 w-8 text-red-500" />
+                                ) : (
+                                  <TbFileTypeDocx className="h-8 w-8 text-blue-500" />
+                                )}
+                                <div>
+                                  <h3 className="font-semibold">{doc.name}</h3>
+                                  <Badge variant="secondary">{doc.category}</Badge>
+                                </div>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEdit(doc);
+                                }}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-4xl">
+                          <DialogHeader>
+                            <DialogTitle>{doc.name}</DialogTitle>
+                          </DialogHeader>
+                          <div className="mt-4 aspect-[16/10] w-full overflow-hidden rounded-lg border">
+                            {doc.file.endsWith('.pdf') ? (
+                              <iframe src={doc.file} className="h-full w-full" />
+                            ) : (
+                              <div className="h-full w-full p-4">
+                                <p>Preview not available for this document type.</p>
+                              </div>
+                            )}
+                          </div>
+                          <div className="mt-4 flex justify-end space-x-2">
+                            <Button
+                              variant="outline"
+                              onClick={() => handleEdit(doc)}
+                            >
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </Button>
+                            <Button>
+                              <Send className="mr-2 h-4 w-4" />
+                              Send
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </PublicLayout>
   );
 }
