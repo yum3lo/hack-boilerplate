@@ -30,16 +30,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export function Header() {
   const router = useRouter();
-  const { isAuthenticated, user, logout } = useAuth();  // Get auth status and user info from your custom hook
+  // const { isAuthenticated, user, logout } = useAuth();
+  const isAuthenticated = true;
 
-  const handleLogout = async () => {
-    try {
-      await logout();  // Call logout from your hook
-      router.push('/');  // Redirect to home page after logout
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await logout();  // Call logout from your hook
+  //     router.push('/');  // Redirect to home page after logout
+  //   } catch (error) {
+  //     console.error('Logout failed:', error);
+  //   }
+  // };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -63,7 +64,7 @@ export function Header() {
           )}
           <Button variant="ghost">
             <LayoutTemplate className="h-5 w-5" />
-            <Link href="/template">Templates</Link>
+            <Link href="/templates">Templates</Link>
           </Button>
         </div>
         <div className="flex items-center gap-4">
@@ -72,15 +73,15 @@ export function Header() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={"/avatar.png"} alt={user?.name || "Avatar"} />
-                    <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
+                    <AvatarImage src={"/avatar.png"} alt={"user?.name || Avatar"} />
+                    <AvatarFallback>{"user?.name?.[0]"}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user?.email}</p>
+                    <p className="text-sm font-medium leading-none">{"user?.email"}</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -90,7 +91,9 @@ export function Header() {
                     <span>Account</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
+                <DropdownMenuItem 
+                  // onClick={handleLogout} 
+                  className="text-red-600 focus:text-red-600">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>

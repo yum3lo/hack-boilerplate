@@ -18,7 +18,7 @@ const PublicLayout = ({
   return (
     <AuroraBackground>
       <div className="flex min-h-screen w-full flex-col overflow-auto">
-        <title>{`${title} | voluntariat`}</title>
+        <title>{`${title} | fairy-desk`}</title>
         {description && <meta name="description" content={description} />}
         <Header />
         <motion.div

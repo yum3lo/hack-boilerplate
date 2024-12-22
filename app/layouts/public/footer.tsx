@@ -28,12 +28,12 @@ export const Footer = () => {
               </a>
             </li>
             <li>
-              <a href="/opportunities" className="text-white hover:text-gray-300">
+              <a href="/glossary" className="text-white hover:text-gray-300">
                 Glossary
               </a>
             </li>
             <li>
-              <a href="/organizations" className="text-white hover:text-gray-300">
+              <a href="/templates" className="text-white hover:text-gray-300">
                 Templates
               </a>
             </li>
