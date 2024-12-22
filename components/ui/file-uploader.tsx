@@ -1,6 +1,6 @@
 "use client";
 
-import { FileTextIcon, UploadIcon, XIcon } from "lucide-react";
+import { FileTextIcon, UploadIcon, XIcon, FileIcon, FileText } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
 import Dropzone, { type DropzoneProps, type FileRejection } from "react-dropzone";
@@ -13,79 +13,14 @@ import { useControllableState } from "@/hooks/use-controllable-state";
 import { cn, formatBytes } from "@/lib/utils";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  /**
-   * Value of the uploader.
-   * @type File[]
-   * @default undefined
-   * @example value={files}
-   */
   value?: File[];
-
-  /**
-   * Function to be called when the value changes.
-   * @type (files: File[]) => void
-   * @default undefined
-   * @example onValueChange={(files) => setFiles(files)}
-   */
   onValueChange?: (files: File[]) => void;
-
-  /**
-   * Function to be called when files are uploaded.
-   * @type (files: File[]) => Promise<void>
-   * @default undefined
-   * @example onUpload={(files) => uploadFiles(files)}
-   */
   onUpload?: (files: File[]) => Promise<void>;
-
-  /**
-   * Progress of the uploaded files.
-   * @type Record<string, number> | undefined
-   * @default undefined
-   * @example progresses={{ "file1.png": 50 }}
-   */
   progresses?: Record<string, number>;
-
-  /**
-   * Accepted file types for the uploader.
-   * @type { [key: string]: string[]}
-   * @default
-   * ```ts
-   * { "image/*": [] }
-   * ```
-   * @example accept={["image/png", "image/jpeg"]}
-   */
   accept?: DropzoneProps["accept"];
-
-  /**
-   * Maximum file size for the uploader.
-   * @type number | undefined
-   * @default 1024 * 1024 * 2 // 2MB
-   * @example maxSize={1024 * 1024 * 2} // 2MB
-   */
   maxSize?: DropzoneProps["maxSize"];
-
-  /**
-   * Maximum number of files for the uploader.
-   * @type number | undefined
-   * @default 1
-   * @example maxFileCount={4}
-   */
   maxFileCount?: DropzoneProps["maxFiles"];
-
-  /**
-   * Whether the uploader should accept multiple files.
-   * @type boolean
-   * @default false
-   * @example multiple
-   */
   multiple?: boolean;
-
-  /**
-   * Whether the uploader is disabled.
-   * @type boolean
-   * @default false
-   * @example disabled
-   */
   disabled?: boolean;
 }
 
@@ -96,9 +31,15 @@ export function FileUploader(props: FileUploaderProps) {
     onUpload,
     progresses,
     accept = {
-      "image/*": []
+      'image/*': [],
+      'application/pdf': [],
+      'application/msword': [],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [], // .docx
+      'application/vnd.ms-excel': [],
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [], // .xlsx
+      'text/plain': []
     },
-    maxSize = 1024 * 1024 * 2,
+    maxSize = 1024 * 1024 * 10, // Increased to 10MB
     maxFileCount = 1,
     multiple = false,
     disabled = false,
@@ -114,7 +55,7 @@ export function FileUploader(props: FileUploaderProps) {
   const onDrop = React.useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFileCount === 1 && acceptedFiles.length > 1) {
-        toast.error("Nu puteți încărca mai mult de un fișier");
+        toast.error("You can't upload more than one file");
         return;
       }
 
@@ -125,7 +66,7 @@ export function FileUploader(props: FileUploaderProps) {
 
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {
-          preview: URL.createObjectURL(file)
+          preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : null
         })
       );
 
@@ -134,26 +75,29 @@ export function FileUploader(props: FileUploaderProps) {
       setFiles(updatedFiles);
 
       if (rejectedFiles.length > 0) {
-        rejectedFiles.forEach(({ file }) => {
-          toast.error(`Fișierul ${file.name} a fost respins`);
+        rejectedFiles.forEach(({ file, errors }) => {
+          const errorMessages = errors.map(e => {
+            if (e.code === 'file-too-large') return `File ${file.name} is too large. Max size is ${formatBytes(maxSize)}`;
+            if (e.code === 'file-invalid-type') return `File ${file.name} has invalid type`;
+            return e.message;
+          });
+          errorMessages.forEach(message => toast.error(message));
         });
       }
 
       if (onUpload && updatedFiles.length > 0 && updatedFiles.length <= maxFileCount) {
-        const target = updatedFiles.length > 0 ? `${updatedFiles.length} fișiere` : `fișier`;
-
+        const target = updatedFiles.length > 1 ? `${updatedFiles.length} files` : 'file';
         toast.promise(onUpload(updatedFiles), {
-          loading: `Se încarcă ${target}...`,
+          loading: `Uploading ${target}...`,
           success: () => {
             setFiles([]);
-            return `${target} încărcat`;
+            return `${target} uploaded successfully`;
           },
-          error: `Eroare la încărcarea ${target}`
+          error: `Error uploading ${target}`
         });
       }
     },
-
-    [files, maxFileCount, multiple, onUpload, setFiles]
+    [files, maxFileCount, multiple, onUpload, setFiles, maxSize]
   );
 
   function onRemove(index: number) {
@@ -163,17 +107,15 @@ export function FileUploader(props: FileUploaderProps) {
     onValueChange?.(newFiles);
   }
 
-  // Revoke preview url when component unmounts
   React.useEffect(() => {
     return () => {
       if (!files) return;
       files.forEach((file) => {
-        if (isFileWithPreview(file)) {
+        if (isFileWithPreview(file) && file.preview) {
           URL.revokeObjectURL(file.preview);
         }
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const isDisabled = disabled || (files?.length ?? 0) >= maxFileCount;
@@ -207,7 +149,7 @@ export function FileUploader(props: FileUploaderProps) {
                   <UploadIcon className="size-7 text-muted-foreground" aria-hidden="true" />
                 </div>
                 <p className="font-medium text-muted-foreground">
-                  Trage fișierele aici pentru a le încărca
+                  Drop files here to upload
                 </p>
               </div>
             ) : (
@@ -217,13 +159,13 @@ export function FileUploader(props: FileUploaderProps) {
                 </div>
                 <div className="flex flex-col gap-px">
                   <p className="font-medium text-muted-foreground">
-                    Trage fișierele aici sau apasă pentru a le selecta
+                    Drag files here or click to select files
                   </p>
                   <p className="text-sm text-muted-foreground/70">
-                    Acceptă
+                    Accepts images, PDFs, Word documents, Excel files and text files
                     {maxFileCount > 1
-                      ? ` ${maxFileCount === Infinity ? "multiple" : maxFileCount} fișiere (fiecare până la ${formatBytes(maxSize)})`
-                      : ` un fișier cu ${formatBytes(maxSize)}`}
+                      ? ` (up to ${maxFileCount === Infinity ? "multiple" : maxFileCount} files, each up to ${formatBytes(maxSize)})`
+                      : ` (up to ${formatBytes(maxSize)})`}
                   </p>
                 </div>
               </div>
@@ -249,6 +191,14 @@ export function FileUploader(props: FileUploaderProps) {
   );
 }
 
+function getFileIcon(fileType: string) {
+  if (fileType.startsWith('image/')) return null; // Will use preview image
+  if (fileType.includes('pdf')) return <FileText className="size-10 text-red-500" aria-hidden="true" />;
+  if (fileType.includes('word')) return <FileTextIcon className="size-10 text-blue-500" aria-hidden="true" />;
+  if (fileType.includes('excel') || fileType.includes('sheet')) return <FileTextIcon className="size-10 text-green-500" aria-hidden="true" />;
+  return <FileIcon className="size-10 text-muted-foreground" aria-hidden="true" />;
+}
+
 interface FileCardProps {
   file: File;
   onRemove: () => void;
@@ -259,7 +209,11 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
   return (
     <div className="relative flex items-center gap-2.5">
       <div className="flex flex-1 gap-2.5">
-        {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
+        {isFileWithPreview(file) && file.preview ? (
+          <FilePreview file={file} />
+        ) : (
+          getFileIcon(file.type)
+        )}
         <div className="flex w-full flex-col gap-2">
           <div className="flex flex-col gap-px">
             <p className="line-clamp-1 text-sm font-medium text-foreground/80">{file.name}</p>
@@ -278,8 +232,8 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
   );
 }
 
-function isFileWithPreview(file: File): file is File & { preview: string } {
-  return "preview" in file && typeof file.preview === "string";
+function isFileWithPreview(file: File): file is File & { preview: string | null } {
+  return 'preview' in file;
 }
 
 interface FilePreviewProps {
@@ -287,18 +241,16 @@ interface FilePreviewProps {
 }
 
 function FilePreview({ file }: FilePreviewProps) {
-  if (file.type.startsWith("image/")) {
-    return (
-      <Image
-        src={file.preview}
-        alt={file.name}
-        width={48}
-        height={48}
-        loading="lazy"
-        className="aspect-square shrink-0 rounded-md object-cover"
-      />
-    );
-  }
-
-  return <FileTextIcon className="size-10 text-muted-foreground" aria-hidden="true" />;
+  if (!file.preview) return null;
+  
+  return (
+    <Image
+      src={file.preview}
+      alt={file.name}
+      width={48}
+      height={48}
+      loading="lazy"
+      className="aspect-square shrink-0 rounded-md object-cover"
+    />
+  );
 }
