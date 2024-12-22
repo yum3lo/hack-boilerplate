@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { FloatingLabelInput } from "@/components/ui/floating-label-input";
 import {
   Tooltip,
   TooltipContent,
@@ -24,7 +25,6 @@ interface BusinessField {
   description?: string;
   required?: boolean;
   type?: string;
-  placeholder?: string;
 }
 
 const requiredFields: BusinessField[] = [
@@ -32,50 +32,43 @@ const requiredFields: BusinessField[] = [
     id: "idno",
     label: "IDNO",
     description: "State Identification Number, which also serves as the Taxpayer Identification Number",
-    type: "text",
-    placeholder: "Enter your IDNO"
+    type: "text"
   },
   {
     id: "registrationCertificate",
     label: "Certificate of Registration",
     description: "Proof of company registration (a scanned copy or reference number)",
-    type: "text",
-    placeholder: "Enter certificate number"
+    type: "text"
   },
   {
     id: "companyName",
     label: "Company Name",
     description: "Official name of the business",
-    type: "text",
-    placeholder: "Enter company name"
+    type: "text"
   },
   {
     id: "businessAddress",
     label: "Business Address",
     description: "Registered address of the company",
-    type: "text",
-    placeholder: "Enter business address"
+    type: "text"
   },
   {
     id: "iban",
     label: "IBAN",
     description: "Business bank account details for financial transactions",
-    type: "text",
-    placeholder: "Enter IBAN"
+    type: "text"
   },
   {
     id: "email",
     label: "Contact Email",
     description: "Primary email address for business communication",
-    type: "email",
-    placeholder: "email@company.com"
+    type: "email"
   },
   {
     id: "phone",
     label: "Contact Phone Number",
     description: "Phone number for correspondence",
-    type: "tel",
-    placeholder: "+373 XXXXXXX"
+    type: "tel"
   }
 ];
 
@@ -84,22 +77,19 @@ const optionalFields: BusinessField[] = [
     id: "vatNumber",
     label: "VAT Number",
     description: "If the company is registered for VAT (only required for VAT-registered businesses)",
-    type: "text",
-    placeholder: "Enter VAT number if applicable"
+    type: "text"
   },
   {
     id: "nameReservation",
     label: "Name Reservation Certificate",
     description: "Proof of company name reservation (if applicable)",
-    type: "text",
-    placeholder: "Enter certificate number if applicable"
+    type: "text"
   },
   {
     id: "authorizedCapital",
     label: "Authorized Capital Amount",
     description: "Declared capital amount, if relevant (not mandatory in Moldova)",
-    type: "number",
-    placeholder: "Enter amount if applicable"
+    type: "number"
   }
 ];
 
@@ -137,18 +127,16 @@ export default function AccountPage() {
     }
   };
 
-  const renderField = ({ id, label, description, type, placeholder }: BusinessField) => (
-    <div className="space-y-2" key={id}>
+  const renderField = ({ id, label, description, type, required }: BusinessField) => (
+    <div className="relative" key={id}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Label 
-              htmlFor={id}
-              className="cursor-pointer hover:text-blue-600"
+            <div 
+              className="absolute right-2 top-2 cursor-pointer z-10"
               onClick={() => description && router.push('/glossary')}
             >
-              {label}
-            </Label>
+            </div>
           </TooltipTrigger>
           {description && (
             <TooltipContent>
@@ -157,63 +145,65 @@ export default function AccountPage() {
           )}
         </Tooltip>
       </TooltipProvider>
-      <Input
+      <FloatingLabelInput
         id={id}
         type={type || "text"}
-        placeholder={placeholder}
+        label={label}
         value={formData[id] || ''}
         onChange={(e) => setFormData(prev => ({ ...prev, [id]: e.target.value }))}
+        className="max-w-[300px]"
+        required={required}
       />
     </div>
   );
 
   return (
     <PublicLayout title="Account Settings">
-      <main className="container my-10 flex items-center justify-center">
-        <div className="flex items-center justify-between space-x-[10vw]">
-          <div>
-            <h1 className="mb-6 max-w-[600px] text-5xl font-bold">
-              Business Profile
-            </h1>
-            <div className="max-w-[570px]">
-              <Card className="mx-auto w-full">
-                <CardHeader className="space-y-1">
-                  <div className="flex items-center space-x-4">
-                    <Image
-                      src="/avatar.png"
-                      alt="Profile"
-                      width={48}
-                      height={48}
-                      className="rounded-full"
-                    />
-                    <div>
-                      <CardTitle className="text-2xl font-bold">Company Information</CardTitle>
-                      <CardDescription>Manage your business details and documentation</CardDescription>
-                    </div>
+      <main className="container my-10">
+        <div className="max-w-5xl mx-auto">
+          <h1 className="mb-6 text-4xl font-bold">
+            Profile Details
+          </h1>
+          <Card>
+            <CardHeader className="space-y-1">
+              <div className="flex items-center space-x-4">
+                <Image
+                  src="/avatar.png"
+                  alt="Profile"
+                  width={48}
+                  height={48}
+                  className="rounded-full"
+                />
+                <div>
+                  <CardTitle className="text-2xl font-bold">Company Information</CardTitle>
+                  <CardDescription>Manage your business details and documentation</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-4">
+                  <h3 className="font-medium text-lg border-b pb-2">Essential Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {requiredFields.map(renderField)}
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-4">
-                      <h3 className="font-medium text-lg">Essential Information</h3>
-                      {requiredFields.map(renderField)}
-                    </div>
+                </div>
 
-                    <div className="space-y-4 pt-6 border-t">
-                      <h3 className="font-medium text-lg">Optional Information</h3>
-                      {optionalFields.map(renderField)}
-                    </div>
+                <div className="space-y-4">
+                  <h3 className="font-medium text-lg border-b pb-2">Optional Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {optionalFields.map(renderField)}
+                  </div>
+                </div>
 
-                    <div className="pt-4">
-                      <Button type="submit" className="w-full" disabled={isLoading}>
-                        {isLoading ? "Saving..." : "Save Changes"}
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+                <div className="pt-4 flex justify-end">
+                  <Button type="submit" className="min-w-[200px]" disabled={isLoading}>
+                    {isLoading ? "Saving..." : "Save Changes"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </main>
     </PublicLayout>
