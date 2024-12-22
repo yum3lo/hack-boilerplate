@@ -1,15 +1,22 @@
 'use client';
-
+// src/lib/store/index.ts
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 
 import { reduxAPI } from './api/root';
-import rootReducer from './reducers';
+import rootReducer from './reducers'; // If you have other reducers
+import userReducer from './userSlice'; // Import the user reducer
+
+// Combine reducers here
+const combinedReducers = {
+  ...rootReducer,  // Include your other reducers if needed
+  user: userReducer,  // Add user reducer
+};
 
 export const makeStore = () =>
   configureStore({
-    reducer: rootReducer,
+    reducer: combinedReducers,
     devTools: process.env.NODE_ENV === 'development',
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(reduxAPI.middleware),
   });
