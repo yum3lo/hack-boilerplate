@@ -27,47 +27,47 @@ export default function Home() {
   // Redux mutations
   const [uploadFile] = useUploadFileMutation();
   const [validateDocument] = useValidateDocumentMutation();
-  // const handleFileChange = async (files: File[]) => {
-  //   setUploadedFiles(files);
-  // };
   const handleFileChange = async (files: File[]) => {
     setUploadedFiles(files);
-    setIsUploading(true);
-
-    try {
-      const uploadPromises = files.map(async (file) => {
-        const formData = new FormData();
-        formData.append("file", file);
-
-        // Upload file and get response with fileId and fileType
-        const response = await uploadFile(formData).unwrap();
-
-        // Assuming the response includes fileId and fileType
-        const { fileId, fileType } = response.data; // Adjust based on your API response structure
-
-        // Attach fileId and fileType to each file
-        file["fileId"] = fileId;
-        file["fileType"] = fileType;
-
-        toast({
-          title: "File Uploaded",
-          description: `File ${file.name} uploaded successfully.`,
-          duration: 3000,
-        });
-      });
-
-      await Promise.all(uploadPromises);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Upload Failed",
-        description: `Error uploading files. Please try again.`,
-        duration: 3000,
-      });
-    } finally {
-      setIsUploading(false);
-    }
   };
+  // const handleFileChange = async (files: File[]) => {
+  //   setUploadedFiles(files);
+  //   setIsUploading(true);
+
+  //   try {
+  //     const uploadPromises = files.map(async (file) => {
+  //       const formData = new FormData();
+  //       formData.append("file", file);
+
+  //       // Upload file and get response with fileId and fileType
+  //       const response = await uploadFile(formData).unwrap();
+
+  //       // Assuming the response includes fileId and fileType
+  //       const { fileId, fileType } = response.data; // Adjust based on your API response structure
+
+  //       // Attach fileId and fileType to each file
+  //       file["fileId"] = fileId;
+  //       file["fileType"] = fileType;
+
+  //       toast({
+  //         title: "File Uploaded",
+  //         description: `File ${file.name} uploaded successfully.`,
+  //         duration: 3000,
+  //       });
+  //     });
+
+  //     await Promise.all(uploadPromises);
+  //   } catch (error) {
+  //     toast({
+  //       variant: "destructive",
+  //       title: "Upload Failed",
+  //       description: `Error uploading files. Please try again.`,
+  //       duration: 3000,
+  //     });
+  //   } finally {
+  //     setIsUploading(false);
+  //   }
+  // };
 
 
   const handleSearchSubmit = async (e: React.FormEvent) => {
@@ -96,45 +96,7 @@ export default function Home() {
   }, 1000);  // Store the response in the state to display in the popup
   };
 
-  // const handleFileCheck = () => {
-  //   if (uploadedFiles.length === 0) {
-  //     toast({
-  //       variant: "destructive",
-  //       title: "No Files",
-  //       description: "Please upload files first.",
-  //       duration: 3000,
-  //     });
-  //     return;
-  //   }
-
-  //   // Initialize validations with a loading state
-  //   const initialValidations: ValidationItem[] = [
-  //     { message: "Determine type of documents", state: null },
-  //     { message: "Verify document integrity", state: null },
-  //     { message: "Check for duplicate entries", state: null },
-  //   ];
-  //   setValidations(initialValidations);
-  //   setIsChecking(true);
-
-  //   // Simulate checks with a timer
-  //   let currentIndex = 0;
-  //   const interval = setInterval(() => {
-  //     setValidations((prev) => {
-  //       if (currentIndex >= prev.length) {
-  //         clearInterval(interval);
-  //         setIsChecking(false);
-  //         return prev;
-  //       }
-
-  //       // Randomly determine success or failure
-  //       const updated = [...prev];
-  //       updated[currentIndex].state = Math.random() > 0.5;
-  //       currentIndex++;
-  //       return updated;
-  //     });
-  //   }, 5000);
-  // };
-  const handleFileCheck = async () => {
+  const handleFileCheck = () => {
     if (uploadedFiles.length === 0) {
       toast({
         variant: "destructive",
@@ -145,51 +107,90 @@ export default function Home() {
       return;
     }
 
-    // Start with loading validation
-    const initialValidations: ValidationItem[] = uploadedFiles.map(() => ({
-      message: "Determining type of documents",
-      state: null,
-    }));
+    // Initialize validations with a loading state
+    const initialValidations: ValidationItem[] = [
+      { message: "Determine type of documents", state: null },
+      { message: "Verify document integrity", state: null },
+      { message: "Check for duplicate entries", state: null },
+    ];
     setValidations(initialValidations);
     setIsChecking(true);
 
-    try {
-      const validationPromises = uploadedFiles.map(async (file, index) => {
-        if (!file.fileId || !file.fileType) {
-          // If fileId or fileType is missing, skip this file
-          return;
+    // Simulate checks with a timer
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      setValidations((prev) => {
+        if (currentIndex >= prev.length) {
+          clearInterval(interval);
+          setIsChecking(false);
+          return prev;
         }
 
-        const response = await validateDocument({
-          fileId: file.fileId,
-          fileType: file.fileType,
-        }).unwrap();
-
-        // Assuming your response has an errorCode to determine success
-        const validationState = response.errorCode === 0;
-
-        setValidations((prevValidations) => {
-          const updatedValidations = [...prevValidations];
-          updatedValidations[index] = {
-            message: "Document validated successfully", // Adjust message as needed
-            state: validationState,
-          };
-          return updatedValidations;
-        });
+        // Randomly determine success or failure
+        const updated = [...prev];
+        updated[currentIndex].state = Math.random() > 0.5;
+        currentIndex++;
+        return updated;
       });
-
-      await Promise.all(validationPromises);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Validation Failed",
-        description: "There was an error validating the files.",
-        duration: 3000,
-      });
-    } finally {
-      setIsChecking(false);
-    }
+    }, 5000);
   };
+
+  // const handleFileCheck = async () => {
+  //   if (uploadedFiles.length === 0) {
+  //     toast({
+  //       variant: "destructive",
+  //       title: "No Files",
+  //       description: "Please upload files first.",
+  //       duration: 3000,
+  //     });
+  //     return;
+  //   }
+
+  //   // Start with loading validation
+  //   const initialValidations: ValidationItem[] = uploadedFiles.map(() => ({
+  //     message: "Determining type of documents",
+  //     state: null,
+  //   }));
+  //   setValidations(initialValidations);
+  //   setIsChecking(true);
+
+  //   try {
+  //     const validationPromises = uploadedFiles.map(async (file, index) => {
+  //       if (!file.fileId || !file.fileType) {
+  //         // If fileId or fileType is missing, skip this file
+  //         return;
+  //       }
+
+  //       const response = await validateDocument({
+  //         fileId: file.fileId,
+  //         fileType: file.fileType,
+  //       }).unwrap();
+
+  //       // Assuming your response has an errorCode to determine success
+  //       const validationState = response.errorCode === 0;
+
+  //       setValidations((prevValidations) => {
+  //         const updatedValidations = [...prevValidations];
+  //         updatedValidations[index] = {
+  //           message: "Document validated successfully", // Adjust message as needed
+  //           state: validationState,
+  //         };
+  //         return updatedValidations;
+  //       });
+  //     });
+
+  //     await Promise.all(validationPromises);
+  //   } catch (error) {
+  //     toast({
+  //       variant: "destructive",
+  //       title: "Validation Failed",
+  //       description: "There was an error validating the files.",
+  //       duration: 3000,
+  //     });
+  //   } finally {
+  //     setIsChecking(false);
+  //   }
+  // };
 
 
   const closePopup = () => {
