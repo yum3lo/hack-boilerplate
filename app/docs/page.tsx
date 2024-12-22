@@ -4,6 +4,9 @@ import { LayoutGrid, List as ListIcon } from "lucide-react"; // Lucide icons
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import PublicLayout from "../layouts/public"; // Adjust based on your project structure
 import mammoth from "mammoth"; // Add this to handle DOCX preview
+import { FaRegFilePdf } from "react-icons/fa6";
+import { Badge } from "@/components/ui/badge";
+import { TbFileTypeDocx } from "react-icons/tb";
 
 export default function DocumentFilter() {
   const [viewMode, setViewMode] = useState("grid");
@@ -15,8 +18,8 @@ export default function DocumentFilter() {
   const documents = [
     { id: 1, name: "Document 1", file: "/documents/PRLab.pdf", category: "PDF" },
     { id: 2, name: "Document 2", file: "/documents/doc2.docx", category: "Word" },
-    { id: 3, name: "Document 3", file: "/documents/doc3.pdf", category: "PDF" },
-    { id: 4, name: "Document 4", file: "/documents/doc4.docx", category: "Word" },
+    { id: 3, name: "Document 3", file: "/documents/PRLab.pdf", category: "PDF" },
+    { id: 4, name: "Document 4", file: "/documents/doc2.docx", category: "Word" },
   ];
 
   // Filter documents based on search and category
@@ -59,22 +62,47 @@ export default function DocumentFilter() {
         <DialogTrigger asChild>
           <div
             className={`border rounded-lg p-4 bg-gray-100 hover:shadow-lg transition-shadow cursor-pointer ${
-              viewMode === "grid" ? "grid grid-cols-3 gap-4" : ""
+              viewMode === "grid" ? "grid grid-cols-1 gap-4" : ""
             }`}
             onClick={() => {
               setSelectedDocument(doc);
               if (doc.file.endsWith(".docx")) handleDocxPreview(doc.file);
             }}
           >
-            <h3 className="mt-2 text-center text-sm font-medium text-gray-800">
+            <h3 className="text-center text-sm font-bold text-gray-800 flex items-center justify-center">
               {doc.name}
             </h3>
-            <div
-              className={`text-center text-xs font-medium p-1 rounded-full inline-block ${getCategoryClass(doc.category)}`}
-            >
+            <div className="flex items-center justify-center space-x-2 mt-2">
+            {/* <Badge className="inline-flex items-center justify-center text-xs font-bold px-2 py-1 rounded-full">
               {doc.category}
-            </div>
+            </Badge> */}
+            <Badge
+              className={`inline-flex items-center justify-center text-base font-bold px-2 py-1 rounded-full ${
+                doc.file.endsWith(".pdf") ? "bg-red-500 text-white" : doc.file.endsWith(".docx") ? "bg-blue-500 text-white" : "bg-gray-200 text-black"
+              }`}
+            >
+              {doc.file.endsWith(".pdf") ? <FaRegFilePdf /> : doc.file.endsWith(".docx") ? <TbFileTypeDocx /> : "Unknown"}
+            </Badge>
           </div>
+          <div className="mt-2">
+            {doc.file.endsWith(".pdf") ? (
+              <iframe
+                src={doc.file}
+                title={doc.name}
+                className="w-full h-[150px] border rounded-lg"
+              ></iframe>
+            ) : doc.file.endsWith(".docx") ? (
+              <div
+                className="w-full h-[150px] overflow-hidden border rounded-lg p-2 bg-gray-50"
+                dangerouslySetInnerHTML={{ __html: docxContent }}
+              ></div>
+            ) : (
+              <p className="text-center text-gray-600">
+                Preview not available.
+              </p>
+            )}
+          </div>
+        </div>
         </DialogTrigger>
         {selectedDocument && (
           <DialogContent className="bg-white text-gray-800 rounded-lg shadow-lg p-6 max-w-[90vw] max-h-[90vh] overflow-auto">
@@ -129,55 +157,61 @@ export default function DocumentFilter() {
 
   return (
     <PublicLayout title="Document Viewer">
-      <div className="p-4 space-y-4 max-w-screen-lg mx-auto">
+      <div className="container py-8">
+        <h1 className="mb-6 text-4xl font-bold">Personal Documents</h1>
+        <p className="text-lg mb-4 leading-relaxed whitespace-pre-wrap">
+          View your own Documents.
+        </p>
         {/* Filters */}
-        <div className="flex items-center justify-between space-x-4">
-          {/* Search Bar */}
-          <input
-            type="text"
-            placeholder="Search documents..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+        <div className="grid grid-cols-1 gap-8">
+          <div className="flex items-center justify-between space-x-4">
+            {/* Search Bar */}
+            <input
+              type="text"
+              placeholder="Search documents..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
 
-          {/* Category Filter */}
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="all">All</option>
-            <option value="PDF">PDF</option>
-            <option value="Word">Word</option>
-          </select>
+            {/* Category Filter */}
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All</option>
+              <option value="PDF">PDF</option>
+              <option value="Word">Word</option>
+            </select>
 
-          {/* View Mode Toggle */}
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setViewMode("grid")}
-              className={`p-2 rounded ${
-                viewMode === "grid" ? "bg-blue-500 text-white" : "bg-gray-200"
-              }`}
-            >
-              <LayoutGrid className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setViewMode("list")}
-              className={`p-2 rounded ${
-                viewMode === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
-              }`}
-            >
-              <ListIcon className="w-5 h-5" />
-            </button>
+            {/* View Mode Toggle */}
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`p-2 rounded ${
+                  viewMode === "grid" ? "bg-blue-500 text-white" : "bg-gray-200"
+                }`}
+              >
+                <LayoutGrid className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`p-2 rounded ${
+                  viewMode === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
+                }`}
+              >
+                <ListIcon className="w-5 h-5" />
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Documents */}
-        <div className="border rounded-lg shadow-lg p-6 bg-white">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Documents</h2>
-          <div className={viewMode === "grid" ? "grid grid-cols-3 gap-4" : ""}>
-            {renderDocuments()}
+          {/* Documents */}
+          <div className="border rounded-lg shadow-lg p-6 bg-white">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Documents</h2>
+            <div className={viewMode === "grid" ? "grid grid-cols-3 gap-4" : ""}>
+              {renderDocuments()}
+            </div>
           </div>
         </div>
       </div>

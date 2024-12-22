@@ -19,6 +19,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import { FaRegFilePdf } from "react-icons/fa6";
+import { TbFileTypeDocx } from "react-icons/tb";
 import { Check, ChevronsUpDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -101,73 +103,80 @@ export default function TemplatePage() {
               viewMode === "grid" ? "grid grid-cols-1 gap-4" : ""
             }`}
             onClick={() => {
-              setSelectedDocument(doc);
-              if (doc.file.endsWith(".docx")) handleDocxPreview(doc.file);
-            }}
-          >
-            <h3 className="text-center text-sm font-medium text-gray-800 flex items-center justify-center">
-              {doc.name}
-            </h3>
-            <div
-              className={`text-center text-xs font-medium p-1 rounded-full inline-block ${getCategoryClass(
-                doc.category
-              )}`}
+                setSelectedDocument(doc);
+                if (doc.file.endsWith(".docx")) handleDocxPreview(doc.file);
+              }}
             >
+          <h3 className="text-center text-sm font-bold text-gray-800 flex items-center justify-center">
+            {doc.name}
+          </h3>
+          <div className="flex items-center justify-center space-x-2 mt-2">
+            <Badge className="inline-flex items-center justify-center text-xs font-bold px-2 py-1 rounded-full">
               {doc.category}
-            </div>
-            <div className="mt-2">
-              {doc.file.endsWith(".pdf") ? (
-                <iframe
-                  src={doc.file}
-                  title={doc.name}
-                  className="w-full h-[150px] border rounded-lg"
-                ></iframe>
-              ) : doc.file.endsWith(".docx") ? (
-                <div
-                  className="w-full h-[150px] overflow-hidden border rounded-lg p-2 bg-gray-50"
-                  dangerouslySetInnerHTML={{ __html: docxContent }}
-                ></div>
-              ) : (
-                <p className="text-center text-gray-600">
-                  Preview not available.
-                </p>
-              )}
-            </div>
+            </Badge>
+            <Badge
+              className={`inline-flex items-center justify-center text-base font-bold px-2 py-1 rounded-full ${
+                doc.file.endsWith(".pdf") ? "bg-red-500 text-white" : doc.file.endsWith(".docx") ? "bg-blue-500 text-white" : "bg-gray-200 text-black"
+              }`}
+            >
+              {doc.file.endsWith(".pdf") ? <FaRegFilePdf /> : doc.file.endsWith(".docx") ? <TbFileTypeDocx /> : "Unknown"}
+            </Badge>
           </div>
-        </DialogTrigger>
-        {selectedDocument && (
-          <DialogContent className="bg-white text-gray-800 rounded-lg shadow-lg p-6 max-w-[90vw] max-h-[90vh] overflow-auto">
-            <DialogHeader>
-              <DialogTitle>{selectedDocument.name}</DialogTitle>
-            </DialogHeader>
-            <div className="mt-4">
-              {selectedDocument.file.endsWith(".pdf") ? (
-                <iframe
-                  src={selectedDocument.file}
-                  title={selectedDocument.name}
-                  className="w-full h-[70vh] border rounded-lg"
-                ></iframe>
-              ) : selectedDocument.file.endsWith(".docx") ? (
-                <div
-                  className="w-full h-[70vh] overflow-y-auto overflow-x-hidden border rounded-lg p-4 bg-gray-50"
-                  style={{
-                    width: "87vw",
-                    height: "500px",
-                    overflowY: "auto",
-                    overflowX: "hidden",
-                    wordWrap: "break-word",
-                  }}
-                  dangerouslySetInnerHTML={{ __html: docxContent }}
-                ></div>
-              ) : (
-                <p className="text-center text-gray-600">
-                  File preview is not supported. Please download the file to view.
-                </p>
-              )}
-            </div>
-          </DialogContent>
+
+      <div className="mt-2">
+        {doc.file.endsWith(".pdf") ? (
+          <iframe
+            src={doc.file}
+            title={doc.name}
+            className="w-full h-[150px] border rounded-lg"
+          ></iframe>
+        ) : doc.file.endsWith(".docx") ? (
+          <div
+            className="w-full h-[150px] overflow-hidden border rounded-lg p-2 bg-gray-50"
+            dangerouslySetInnerHTML={{ __html: docxContent }}
+          ></div>
+        ) : (
+          <p className="text-center text-gray-600">
+            Preview not available.
+          </p>
         )}
-      </Dialog>
+      </div>
+    </div>
+  </DialogTrigger>
+  {selectedDocument && (
+    <DialogContent className="bg-white text-gray-800 rounded-lg shadow-lg p-6 max-w-[90vw] max-h-[90vh] overflow-auto">
+      <DialogHeader>
+        <DialogTitle>{selectedDocument.name}</DialogTitle>
+      </DialogHeader>
+      <div className="mt-4">
+        {selectedDocument.file.endsWith(".pdf") ? (
+          <iframe
+            src={selectedDocument.file}
+            title={selectedDocument.name}
+            className="w-full h-[70vh] border rounded-lg"
+          ></iframe>
+        ) : selectedDocument.file.endsWith(".docx") ? (
+          <div
+            className="w-full h-[70vh] overflow-y-auto overflow-x-hidden border rounded-lg p-4 bg-gray-50"
+            style={{
+              width: "87vw",
+              height: "500px",
+              overflowY: "auto",
+              overflowX: "hidden",
+              wordWrap: "break-word",
+            }}
+            dangerouslySetInnerHTML={{ __html: docxContent }}
+          ></div>
+        ) : (
+          <p className="text-center text-gray-600">
+            File preview is not supported. Please download the file to view.
+          </p>
+        )}
+      </div>
+    </DialogContent>
+  )}
+</Dialog>
+
     ));
   };
 
@@ -178,155 +187,48 @@ export default function TemplatePage() {
           <p className="text-lg mb-4 leading-relaxed whitespace-pre-wrap">
             Search for best suitable Templates for your goals.
           </p>
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-1">
-              <Card>
-                <CardHeader className="space-y-4">
-                  <div className="relative">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search templates..."
-                      className="pl-8"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                  <Select
-                    value={selectedCategory}
-                    onValueChange={setSelectedCategory}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      {categories.map(category => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </CardHeader>
-                {/* <CardContent>
-                  <ScrollArea className="h-[400px] pr-4">
-                    {sortedLetters.map((letter) => (
-                      <div key={letter} className="mb-6">
-                        <h2 className="mb-2 text-lg font-semibold text-muted-foreground">{letter}</h2>
-                        <div className="space-y-1">
-                          {groupedTemplates[letter].map((template) => (
-                            <button
-                              key={template.name}
-                              onClick={() => setSelectedTerm(template)}
-                              className={`w-full rounded-lg px-3 py-2 text-left hover:bg-accent ${
-                                selectedTerm?.name === template.name ? 'bg-accent' : ''
-                              }`}
-                            >
-                              <div className="font-medium">{template.name}</div>
-                              <div className="text-sm text-muted-foreground">{template.category}</div>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </ScrollArea>
-                </CardContent> */}
-              </Card>
-            </div>
-  
-            <div className="lg:col-span-2">
-              <div className="border rounded-lg shadow-lg p-6 bg-white">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Documents</h2>
-                <div className={viewMode === "grid" ? "grid grid-cols-2 gap-4" : ""}>
-                  {renderDocuments()}
-                </div>
-              </div>
-
-              {/* <Card className="h-auto">
-                <CardHeader>
-                  <CardTitle className="text-2xl">{selectedTerm?.name}</CardTitle>
-                  <div className="text-sm text-muted-foreground">{selectedTerm?.category}</div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg leading-relaxed whitespace-pre-wrap text-justify">{selectedTerm?.description}</p>
-                </CardContent>
-              </Card> */}
-            </div>
-          </div>
-        </div>
-
-      {/* <div>
-      
-      <main className="container my-10 flex flex-col items-center justify-center">
-        <div className="flex items-center justify-between">
+          <div className="grid grid-cols-1 gap-8">
           <div>
-            <h1 className="mb-6 max-w-[800px] text-5xl font-bold">
-              Welcome to the template page
-            </h1>
+            <Card>
+              <CardHeader className="space-y-4">
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search templates..."
+                    className="pl-8"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <Select
+                  value={selectedCategory}
+                  onValueChange={setSelectedCategory}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </CardHeader>
+            </Card>
           </div>
-        </div>
-        <div className="grid grid-cols-2 gap-8 w-full">
-          <div className="flex items-center justify-center">
-
-          <div className="flex w-full max-w-sm items-center space-x-2">
-            <div className="flex flex-direction-col space-x-2">
-              <div className="flex w-full max-w-sm items-center space-x-2">
-                <Input placeholder="Search..." />
-                <Button type="submit">Search</Button>
+          <div>
+            <div className="border rounded-lg shadow-lg p-6 bg-white">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Documents</h2>
+              <div className="grid grid-cols-3 gap-4">
+                {renderDocuments()}
               </div>
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-[200px] justify-between"
-                  >
-                    {value
-                      ? frameworks.find((framework) => framework.value === value)?.label
-                      : "Select category..."}
-                    <ChevronsUpDown className="opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                  <Command>
-                    <CommandInput placeholder="Search category..." className="h-9" />
-                    <CommandList>
-                      <CommandEmpty>No framework found.</CommandEmpty>
-                      <CommandGroup>
-                        {frameworks.map((framework) => (
-                          <CommandItem
-                            key={framework.value}
-                            value={framework.value}
-                            onSelect={(currentValue) => {
-                              setValue(currentValue === value ? "" : currentValue)
-                              setOpen(false)
-                            }}
-                          >
-                            {framework.label}
-                            <Check
-                              className={cn(
-                                "ml-auto",
-                                value === framework.value ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>  
             </div>
           </div>
-
-          </div>
-          <div className="flex items-center justify-center">
-            Cards
-          </div>
         </div>
-      </main>
-    </div> */}
+      </div>
     </PublicLayout>
   );
 }
