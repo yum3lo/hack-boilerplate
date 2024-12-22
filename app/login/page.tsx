@@ -6,21 +6,31 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input"; 
 import { Button } from "@/components/ui/button"; 
 import PublicLayout from "../layouts/public"; 
+import { useAuth } from '@/hooks/use-auth';
+import { useRouter } from 'next/navigation';
  
 export default function LoginPage() { 
-  const [email, setEmail] = useState(""); 
-  const [password, setPassword] = useState(""); 
-  const [login, { isLoading, isSuccess, isError }] = useLoginMutation(); 
- 
-  const handleSubmit = async (e: React.FormEvent) => { 
-    e.preventDefault(); 
-    try { 
-      const response = await login({ email, password }).unwrap(); 
-      console.log("Login successful", response); 
-    } catch (err) { 
-      console.error("Login failed", err); 
-    } 
-  }; 
+  const router = useRouter();
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginMutation, { isLoading, isSuccess, isError }] = useLoginMutation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await loginMutation({ email, password }).unwrap();
+      console.log("Login successful", response);
+      
+      // Update auth state
+      login(response.user);
+      
+      // Redirect to home page or dashboard
+      router.push('/');
+    } catch (err) {
+      console.error("Login failed", err);
+    }
+  };
  
   return ( 
     <PublicLayout title="Login"> 
@@ -78,7 +88,7 @@ export default function LoginPage() {
             <img 
               width={458} 
               height={446} 
-              src="/skeleton" 
+              src="/skeleton.webp" 
               alt="Skeleton" 
               className="rounded-lg" 
             /> 
