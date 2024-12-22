@@ -13,7 +13,7 @@ import { HYDRATE } from 'next-redux-wrapper';
 
 import { baseQuery } from '@/lib/config/base-query';
 
-const TAG_TYPES = <const>['GET_ME', 'GET_TODOS', 'AUTH'];
+const TAG_TYPES = <const>['GET_ME', 'GET_TODOS', 'AUTH', 'FILE'];
 
 export type TagType = (typeof TAG_TYPES)[number];
 

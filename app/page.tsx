@@ -8,8 +8,6 @@ import { FileUploader } from "@/components/ui/file-uploader";
 import { useToast } from "@/hooks/use-toast";
 import PublicLayout from "./layouts/public";
 import { useUploadFileMutation, useValidateDocumentMutation } from "./queries"; // Redux hooks
-import { useAppDispatch } from "@/lib/store";
-
 type ValidationItem = {
   message: string;
   state: boolean | null; // `null` for loading, `true` for success, `false` for failure
@@ -29,7 +27,6 @@ export default function Home() {
   // Redux mutations
   const [uploadFile] = useUploadFileMutation();
   const [validateDocument] = useValidateDocumentMutation();
-  const dispatch = useAppDispatch();
 
   const handleFileChange = async (files: File[]) => {
     setUploadedFiles(files);
