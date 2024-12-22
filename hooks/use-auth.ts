@@ -1,13 +1,14 @@
-// hooks/useAuth.ts
+// hooks/use-auth.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User } from '@/app/login/types'; // Import your existing User type
+import type { User } from '@/types/user';
 
 interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
   login: (user: User) => void;
-  logout: () => Promise<void>;
+  logout: () => void;
+  updateUser: (userData: Partial<User>) => void;
 }
 
 export const useAuth = create<AuthState>()(
@@ -16,28 +17,20 @@ export const useAuth = create<AuthState>()(
       isAuthenticated: false,
       user: null,
       login: (user) => set({ isAuthenticated: true, user }),
-      logout: async () => {
-        try {
-          // Add your logout API call here if needed
-          // await api.logout();
-          
-          // Clear the auth state
-          set({ isAuthenticated: false, user: null });
-          
-          // Clear any stored tokens or other auth data
-          localStorage.removeItem('token');
-          
-          return Promise.resolve();
-        } catch (error) {
-          return Promise.reject(error);
-        }
+      logout: () => {
+        set({ isAuthenticated: false, user: null });
+        localStorage.removeItem('token');
       },
+      updateUser: (userData) => 
+        set((state) => ({
+          user: state.user ? { ...state.user, ...userData } : null,
+        })),
     }),
     {
       name: 'auth-storage',
       partialize: (state) => ({ 
         isAuthenticated: state.isAuthenticated,
-        user: state.user
+        user: state.user,
       }),
     }
   )

@@ -6,7 +6,8 @@ import { Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { ReduxProvider } from '@/lib/store/provider';
 import { cn } from '@/lib/utils';
-import Snow from "@/components/ui/Snow"
+import Snow from "@/components/ui/Snow";
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -22,9 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className)}>
-        
-        <ReduxProvider>{children} <Snow /></ReduxProvider>
-        <Toaster richColors />
+        <ReduxProvider>
+          <main className="relative min-h-screen">
+            {children}
+            <Snow />
+          </main>
+          <Toaster richColors />
+        </ReduxProvider>
       </body>
     </html>
   );
