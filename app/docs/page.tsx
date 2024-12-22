@@ -35,16 +35,26 @@ export default function DocumentsPage() {
   const [docxContent, setDocxContent] = useState("");
 
   const documents = [
-    { id: 1, name: "Business Registration", file: "/documents/PRLab.pdf", category: "PDF" },
-    { id: 2, name: "Tax Declaration", file: "/documents/doc2.docx", category: "Word" },
-    { id: 3, name: "Annual Report", file: "/documents/PRLab.pdf", category: "PDF" },
-    { id: 4, name: "Employee Contracts", file: "/documents/doc2.docx", category: "Word" },
+    { id: 1, name: "Business Registration", file: "/documents/PRLab.pdf", type: "PDF", category: "Registration Details" },
+    { id: 2, name: "Tax Declaration", file: "/documents/doc2.docx", type: "Word", category: "Financial Operations" },
+    { id: 3, name: "Annual Report", file: "/documents/PRLab.pdf", type: "PDF", category: "Business Operations" },
+    { id: 4, name: "Employee Contracts", file: "/documents/doc2.docx", type: "Word", category: "Legal Documents" },
   ];
+  
+  const categories = [
+    "Business Operations",
+    "Financial Operations",
+    "Legal Documents",
+    "Registration Details"
+  ];
+
+  const [selectedType, setSelectedType] = useState("all");
 
   const filteredDocuments = documents.filter((doc) => {
     const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "all" || doc.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesType = selectedType === "all" || doc.type === selectedType;
+    return matchesSearch && matchesCategory && matchesType;
   });
 
   const handleEdit = (doc: Document) => {
@@ -87,7 +97,7 @@ export default function DocumentsPage() {
                       </Button>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4 pt-4">
+                  <div className="flex items-center gap-4 pt-4">
                     <Input
                       type="text"
                       placeholder="Search documents..."
@@ -98,7 +108,19 @@ export default function DocumentsPage() {
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      className="w-[180px] rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    >
+                      <option value="all">All Categories</option>
+                      {categories.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      value={selectedType}
+                      onChange={(e) => setSelectedType(e.target.value)}
+                      className="w-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm"
                     >
                       <option value="all">All Types</option>
                       <option value="PDF">PDF</option>
@@ -114,14 +136,21 @@ export default function DocumentsPage() {
                           <div className="group relative overflow-hidden rounded-lg border bg-card p-4 transition-shadow hover:shadow-lg">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-2">
-                                {doc.category === "PDF" ? (
+                                {doc.type === "PDF" ? (
                                   <FileText className="h-8 w-8 text-red-500" />
                                 ) : (
                                   <TbFileTypeDocx className="h-8 w-8 text-blue-500" />
                                 )}
                                 <div>
                                   <h3 className="font-semibold">{doc.name}</h3>
-                                  <Badge variant="secondary">{doc.category}</Badge>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <Badge variant="secondary" className="text-xs">
+                                      {doc.type}
+                                    </Badge>
+                                    <Badge variant="outline" className="text-xs">
+                                      {doc.category}
+                                    </Badge>
+                                  </div>
                                 </div>
                               </div>
                               <Button
