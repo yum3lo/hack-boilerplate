@@ -67,8 +67,8 @@
             "name": "Contract de Asigurare Socială",
             "description": "A social insurance contract that provides coverage for employees' social security benefits. This contract outlines the terms and conditions of social insurance and must be submitted to the relevant authorities for registration.",
             "category": "Legal Documents",
-            "documentType": "DOCX",
-            "file": "/documents/doc2.docx"
+            "documentType": "PDF",
+            "file": "/documents/PRLab.pdf"
         }
     ]
 }

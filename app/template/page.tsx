@@ -28,6 +28,7 @@ import { useState } from "react";
 import templatesData from "../data/templates.json";
 import mammoth from "mammoth";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge"
 
 const categories = Array.from(new Set(templatesData.templates.map(name => name.category))).sort();
 const documents = [
@@ -91,26 +92,46 @@ export default function TemplatePage() {
           return "bg-gray-100 text-gray-800";
       }
     };
-
+  
     return filteredTemplates.map((doc) => (
       <Dialog key={doc.id}>
         <DialogTrigger asChild>
           <div
             className={`border rounded-lg p-4 bg-gray-100 hover:shadow-lg transition-shadow cursor-pointer ${
-              viewMode === "grid" ? "grid grid-cols-3 gap-4" : ""
+              viewMode === "grid" ? "grid grid-cols-1 gap-4" : ""
             }`}
             onClick={() => {
               setSelectedDocument(doc);
               if (doc.file.endsWith(".docx")) handleDocxPreview(doc.file);
             }}
           >
-            <h3 className="mt-2 text-center text-sm font-medium text-gray-800">
+            <h3 className="text-center text-sm font-medium text-gray-800 flex items-center justify-center">
               {doc.name}
             </h3>
             <div
-              className={`text-center text-xs font-medium p-1 rounded-full inline-block ${getCategoryClass(doc.category)}`}
+              className={`text-center text-xs font-medium p-1 rounded-full inline-block ${getCategoryClass(
+                doc.category
+              )}`}
             >
               {doc.category}
+            </div>
+            <div className="mt-2">
+              {doc.file.endsWith(".pdf") ? (
+                <iframe
+                  src={doc.file}
+                  title={doc.name}
+                  className="w-full h-[150px] border rounded-lg"
+                ></iframe>
+              ) : doc.file.endsWith(".docx") ? (
+                <div
+                  className="w-full h-[150px] overflow-hidden border rounded-lg p-2 bg-gray-50"
+                  dangerouslySetInnerHTML={{ __html: docxContent }}
+                ></div>
+              ) : (
+                <p className="text-center text-gray-600">
+                  Preview not available.
+                </p>
+              )}
             </div>
           </div>
         </DialogTrigger>
@@ -130,11 +151,11 @@ export default function TemplatePage() {
                 <div
                   className="w-full h-[70vh] overflow-y-auto overflow-x-hidden border rounded-lg p-4 bg-gray-50"
                   style={{
-                    width: "87vw", // Fixed width
-                    height: "500px", // Fixed height
-                    overflowY: "auto", // Scrollable vertical content
-                    overflowX: "hidden", // Prevent horizontal scrolling
-                    wordWrap: "break-word", // Ensure text wraps
+                    width: "87vw",
+                    height: "500px",
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                    wordWrap: "break-word",
                   }}
                   dangerouslySetInnerHTML={{ __html: docxContent }}
                 ></div>
@@ -143,21 +164,6 @@ export default function TemplatePage() {
                   File preview is not supported. Please download the file to view.
                 </p>
               )}
-            </div>
-            {/* Buttons */}
-            <div className="mt-6 flex justify-end space-x-4">
-              <button
-                onClick={() => console.log("Edit button clicked")} // Replace with actual edit logic
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => console.log("Send button clicked")} // Replace with actual send logic
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-              >
-                Send
-              </button>
             </div>
           </DialogContent>
         )}
@@ -202,7 +208,7 @@ export default function TemplatePage() {
                     </SelectContent>
                   </Select>
                 </CardHeader>
-                <CardContent>
+                {/* <CardContent>
                   <ScrollArea className="h-[400px] pr-4">
                     {sortedLetters.map((letter) => (
                       <div key={letter} className="mb-6">
@@ -224,17 +230,17 @@ export default function TemplatePage() {
                       </div>
                     ))}
                   </ScrollArea>
-                </CardContent>
+                </CardContent> */}
               </Card>
             </div>
   
             <div className="lg:col-span-2">
-            <div className="border rounded-lg shadow-lg p-6 bg-white">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Documents</h2>
-              <div className={viewMode === "grid" ? "grid grid-cols-2 gap-4 justify-content-center" : ""}>
-                {renderDocuments()}
+              <div className="border rounded-lg shadow-lg p-6 bg-white">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Documents</h2>
+                <div className={viewMode === "grid" ? "grid grid-cols-2 gap-4" : ""}>
+                  {renderDocuments()}
+                </div>
               </div>
-            </div>
 
               {/* <Card className="h-auto">
                 <CardHeader>
