@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import PublicLayout from "../layouts/public";
+import { HelpCircle } from 'lucide-react';
+import Link from 'next/link';
 
 interface BusinessField {
   id: string;
@@ -124,27 +126,41 @@ export default function AccountPage() {
 
   const renderField = ({ id, label, description, type, required }: BusinessField) => (
     <div className="relative" key={id}>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="absolute right-2 top-2 cursor-pointer z-10"></div>
-          </TooltipTrigger>
-          {description && (
-            <TooltipContent>
-              <p className="max-w-xs">{description}</p>
-            </TooltipContent>
-          )}
-        </Tooltip>
-      </TooltipProvider>
-      <FloatingLabelInput
-        id={id}
-        type={type || "text"}
-        label={label}
-        value={formData[id] || ''}
-        onChange={(e) => setFormData((prev) => ({ ...prev, [id]: e.target.value }))}
-        className="max-w-[300px]"
-        required={required}
-      />
+      <div className="flex items-center gap-2">
+        <FloatingLabelInput
+          id={id}
+          type={type || "text"}
+          label={label}
+          value={formData[id] || ''}
+          onChange={(e) => setFormData((prev) => ({ ...prev, [id]: e.target.value }))}
+          className="w-[340px]"
+          required={required}
+        />
+        {description && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="h-8 w-8 p-0"
+                >
+                  <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="max-w-[300px]">
+                <p className="text-sm">{description}</p>
+                <Link 
+                  href="/glossary" 
+                  className="mt-2 text-sm text-blue-500 hover:underline block"
+                >
+                  See in glossary
+                </Link>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+      </div>
     </div>
   );
 
