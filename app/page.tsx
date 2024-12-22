@@ -27,7 +27,9 @@ export default function Home() {
   // Redux mutations
   const [uploadFile] = useUploadFileMutation();
   const [validateDocument] = useValidateDocumentMutation();
-
+  // const handleFileChange = async (files: File[]) => {
+  //   setUploadedFiles(files);
+  // };
   const handleFileChange = async (files: File[]) => {
     setUploadedFiles(files);
     setIsUploading(true);
@@ -94,6 +96,44 @@ export default function Home() {
   }, 1000);  // Store the response in the state to display in the popup
   };
 
+  // const handleFileCheck = () => {
+  //   if (uploadedFiles.length === 0) {
+  //     toast({
+  //       variant: "destructive",
+  //       title: "No Files",
+  //       description: "Please upload files first.",
+  //       duration: 3000,
+  //     });
+  //     return;
+  //   }
+
+  //   // Initialize validations with a loading state
+  //   const initialValidations: ValidationItem[] = [
+  //     { message: "Determine type of documents", state: null },
+  //     { message: "Verify document integrity", state: null },
+  //     { message: "Check for duplicate entries", state: null },
+  //   ];
+  //   setValidations(initialValidations);
+  //   setIsChecking(true);
+
+  //   // Simulate checks with a timer
+  //   let currentIndex = 0;
+  //   const interval = setInterval(() => {
+  //     setValidations((prev) => {
+  //       if (currentIndex >= prev.length) {
+  //         clearInterval(interval);
+  //         setIsChecking(false);
+  //         return prev;
+  //       }
+
+  //       // Randomly determine success or failure
+  //       const updated = [...prev];
+  //       updated[currentIndex].state = Math.random() > 0.5;
+  //       currentIndex++;
+  //       return updated;
+  //     });
+  //   }, 5000);
+  // };
   const handleFileCheck = async () => {
     if (uploadedFiles.length === 0) {
       toast({
@@ -212,7 +252,8 @@ export default function Home() {
               </div>
 
               {/* Validation Results */}
-              {validations.length > 0 && (
+               {/* Validation Results */}
+               {validations.length > 0 && (
                 <ul className="mt-6 space-y-4">
                   {validations.map((validation, index) => (
                     <li
