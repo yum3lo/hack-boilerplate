@@ -52,20 +52,26 @@ export function Header() {
           </Link>
         </div>
         <div className="flex items-center space-x-4">
-          <Button variant="ghost">
-            <SquareLibrary className="h-5 w-5" />
-            <Link href="/glossary">Glossary</Link>
-          </Button>
-          {isAuthenticated && (
+          <Link href="/glossary">
             <Button variant="ghost">
-              <Folder className="h-5 w-5" />
-              <Link href="/docs">My docs</Link>
+              <SquareLibrary className="h-5 w-5" />
+              Glossary
             </Button>
+          </Link>
+          {isAuthenticated && (
+            <Link href="/docs">
+              <Button variant="ghost">
+                <Folder className="h-5 w-5" />
+                My docs
+              </Button>
+            </Link>
           )}
-          <Button variant="ghost">
-            <LayoutTemplate className="h-5 w-5" />
-            <Link href="/templates">Templates</Link>
-          </Button>
+          <Link href="/templates">
+            <Button variant="ghost">
+              <LayoutTemplate className="h-5 w-5" />
+              Templates
+            </Button>
+          </Link>
         </div>
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
